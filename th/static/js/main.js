@@ -1,0 +1,1 @@
+$(document).ready(function () {        $('#sidebar').load('/sidebar_init/');        $('.ui.dropdown').dropdown({             fullTextSearch:true        })});

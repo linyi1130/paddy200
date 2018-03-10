@@ -60,3 +60,48 @@ class ClubUser(models.Model):  # 系统俱乐部与玩家关系表
     note = models.CharField(max_length=100)
     active_time = models.DateTimeField(default=timezone.now)
     inactive_time = models.DateTimeField(default='2037-01-01')
+
+
+class PmOperaterType(models.Model):  # 操作员操作类型维度表 例如：存款，上分，登记战绩等
+    type_id = models.IntegerField(null=False)
+    type_name = models.IntegerField(null=False)
+    inactive_time = models.DateTimeField(default='2037-01-01')
+
+
+class Operator(models.Model):  # 操作员基本信息表
+    operator_id = models.IntegerField(null=False)
+    operator_name = models.CharField(max_length=20)
+    login_id = models.CharField(max_length=20)
+    password = models.CharField(max_length=80)
+    club_id = models.IntegerField(null=True)
+    group_id = models.IntegerField(null=True)
+    developer_id = models.IntegerField(null=True)
+    active_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-01-01')
+    permission_group = models.IntegerField(null=True)
+    is_active = models.BooleanField(default=True)
+
+
+class OperatorGroup(models.Model):  # 客服组表
+    group_id = models.AutoField(primary_key=True)
+    group_name = models.CharField(max_length=20)
+    club_id = models.IntegerField(null=False)
+    active_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-01-01')
+
+
+class ClubAccount(models.Model):  # 俱乐部客服组账户表
+    account_id = models.IntegerField(null=False)
+    club_id = models.IntegerField(null=False)
+    type_id = models.IntegerField(null=False)
+    group_id = models.IntegerField(null=False)
+    account_desc = models.CharField(max_length=20)
+    active_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-01-01')
+
+
+class PmAccount(models.Model):  # 账户类型维度表(银行卡，微信，支付宝等)
+    type_id = models.AutoField(primary_key=True)
+    type_name = models.CharField(max_length=20)
+    inactive_time = models.DateTimeField(default='2037-01-01')
+
