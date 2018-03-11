@@ -11,6 +11,15 @@ class User(models.Model):  # 用户信息表
     inactive_time = models.DateTimeField(default='2037-01-01')
 
 
+class UserAccount(models.Model):  # 用户账户信息表
+    account_id = models.IntegerField(null=False)
+    user_id = models.IntegerField(null=False)
+    club_id = models.IntegerField(null=False)
+    account_level = models.IntegerField(null=False)
+    active_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-1-1')
+
+
 class GameUser(models.Model):  # 游戏平台用户信息
     game_user_id = models.IntegerField(null=False)
     user_name = models.CharField(max_length=20)
@@ -58,6 +67,15 @@ class ClubUser(models.Model):  # 系统俱乐部与玩家关系表
     account_id = models.IntegerField(null=False)
     remark = models.CharField(max_length=20)
     note = models.CharField(max_length=100)
+    active_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-01-01')
+
+
+class ClubUserFeedBack(models.Model):  # 玩家返水配置表
+    user_id = models.IntegerField(null=False)
+    club_id = models.IntegerField(null=False)
+    feedback_type = models.IntegerField(null=False)
+    feedback_rate = models.IntegerField(null=False)
     active_time = models.DateTimeField(default=timezone.now)
     inactive_time = models.DateTimeField(default='2037-01-01')
 

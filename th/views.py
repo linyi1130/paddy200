@@ -5,11 +5,14 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from th.models import *
 from th.mainFunctions import *
+import json
+import django.core.serializers.json
 
 
 def test(request):
-
-    return render(request,'templete_main.html')
+    user_id=147
+    result=poker_get_user_club_id(user_id)
+    return HttpResponse(result)
 
 
 def login(request):
@@ -110,7 +113,7 @@ def operator_subs_list(request):  # 操作员列表
     return render(request, 'manage/operator_subs_list.html', {'operator_list': operator_list})
 
 
-def operator_relation(request):
+def operator_relation(request):  # 操作员关系加载页
     club_id=1000
     tb_group_list = OperatorGroup.objects.filter(inactive_time='2037-01-01').filter(club_id=club_id)
     tb_operator_list = Operator.objects.filter(inactive_time='2037-01-01').filter(club_id=club_id).filter(group_id=None)
@@ -118,7 +121,7 @@ def operator_relation(request):
                                                              'tb_operator_list': tb_operator_list})
 
 
-def operator_relation_setup(request):
+def operator_relation_setup(request):  # 操作员关系绑定
     operator_id_list = request.POST['operator_id']
     group_id = request.POST['group_id']
     operator_id = operator_id_list.split(",")
@@ -127,3 +130,34 @@ def operator_relation_setup(request):
             if not func_operation_relation(t, group_id):
                 return HttpResponse('False')
     return HttpResponse('True')
+
+
+def user(request):  # 新增用户加载页
+    web_name = '玩家注册'
+    club_name = '很厉害的俱乐部'
+    return render(request, 'user.html', {'web_name': web_name, 'club_name': club_name})
+
+
+def register_user(request):
+    club_id = 1000
+    user_name = request.POST['user_name']
+    remark = request.POST['remark']
+    note = request.POST['note']
+    feedback = request.POST['feedback']
+    feedback = int(float(feedback) * 10000)
+    feedback_type = request.POST['feedback_type']
+    if func_register_club_user(user_name, club_id, remark, note):
+        if feedback != 0:
+            user_id=func_get_user_id_by_user_name(user_name)
+            func_user_feedback_reg(user_id, club_id, feedback, feedback_type)
+    else:
+        return HttpResponse('False')
+    return HttpResponse('True')
+
+
+def user_subs_list(request):
+    club_id=1000
+    tb_result=func_get_userlist_by_clubid(club_id)
+    return render(request, 'user_list.html',{'tb_user': tb_result})
+
+

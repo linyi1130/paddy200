@@ -37,4 +37,7 @@ urlpatterns = [
     url(r'^add_operator/', add_operator),
     url(r'^operator_relation/', operator_relation),
     url(r'^operator_relation_setup/', operator_relation_setup),
+    url(r'^user/', user),
+    url(r'^register_user/', register_user),
+    url(r'^user_subs_list/', user_subs_list),
 ]
