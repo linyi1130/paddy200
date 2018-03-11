@@ -24,10 +24,14 @@ def sidebar_init(request):  # 边栏初始化
     return render(request,'sidebar_templete.html')
 
 
-def usercash(request):
+def usercash(request):  # 用户存取款加载页
     web_name = '积分充值'
-
-    return render(request,'usercash.html', {'web_name': web_name})
+    club_id=1000
+    group_id=1
+    tb_user = func_dropdown_userinfo(club_id)
+    tb_type_list = ClubAccount.objects.filter(inactive_time='2037-01-01').filter(group_id=group_id).filter(
+        club_id=club_id).values('account_id', 'account_desc')
+    return render(request,'usercash.html', {'web_name': web_name,'tb_user': tb_user,'tb_type_list': tb_type_list})
 
 
 def registerclub(request):
@@ -161,3 +165,78 @@ def user_subs_list(request):
     return render(request, 'user_list.html',{'tb_user': tb_result})
 
 
+def user_account_info(request):
+    club_id = 1000
+    club_name = '很厉害的俱乐部'
+    user_id = request.POST['user_id']
+    account_id = request.POST['account_id']
+    user_name = request.POST['user_name']
+
+    master_account = func_user_master_accountinfo(club_id,account_id)
+    balance_info = func_user_account_info(club_id, user_id, account_id)
+    user_note= func_user_note(club_id,user_id)
+    tb_result = {'user_name':user_name, 'master_account': master_account, 'club_name': club_name}
+    return render(request, 'user_account_info.html', {'tb_result': tb_result, 'blance_info': balance_info, 'user_note': user_note})
+
+
+def group_subs_list(request):  # 客服组账户余额列表
+    club_id = 1000
+    group_id = 1
+    group_name = '1号'
+    tb_result = func_club_subs_accountlist(club_id, group_id)
+    return render(request,'group_subs_list.html', {'tb_result': tb_result, 'group_name': group_name})
+
+
+def user_balance_cash(request):
+    club_id=1000
+    group_id = 1
+    operator_id = 3000
+    user_id = request.POST['user_id']
+    account_id = func_get_account_by_userid(user_id, club_id)
+    pay_account_id = request.POST['pay_account_id']
+    chance_num = request.POST['change_num']
+    type_id = request.POST['type_id']
+    note = request.POST['note']
+    chance_num = int(float(chance_num)*10000)
+    type_id = int(type_id)
+    serial_no = func_create_serial_no(club_id, operator_id)
+    if func_user_cash(account_id, user_id, club_id, type_id, operator_id, chance_num, note, serial_no):
+        if func_club_cash(pay_account_id, club_id, type_id, operator_id, chance_num, group_id, note, serial_no):
+            return HttpResponse('True')
+        else:
+            return HttpResponse('False')
+
+
+def check_cash_balance(request):
+    club_id=1000
+    group_id = 1
+    operator_id = 3000
+    user_id = request.POST['user_id']
+    account_id = func_get_account_by_userid(user_id, club_id)
+    pay_account_id = request.POST['pay_account_id']
+    chance_num = request.POST['change_num']
+    chance_num = int(float(chance_num)*10000)
+    flag1 = func_user_balance_check(club_id, account_id, chance_num)
+    flag2 = func_club_balance_check(pay_account_id, chance_num)
+    if flag1 & flag2:
+        return HttpResponse('True')
+    else:
+        return HttpResponse('False')
+
+
+def user_subs_balance_list(request):
+    club_id = 1000
+    user_id = request.POST['user_id']
+    account_id = func_get_account_by_userid(user_id, club_id)
+    tb_result = func_user_balance_subs_list(club_id, account_id)
+    return render(request, 'user_subs_balance_list.html', {'tb_balance_list': tb_result})
+
+
+def user_result_min_list(request):
+    club_id=1000
+    club_name='很厉害的俱乐部'
+    user_id = request.POST['user_id']
+    user_name = request.POST['user_name']
+    account_id = func_get_account_by_userid(user_id, club_id)
+    tb_balance_list = func_user_balance_subs_list(club_id, account_id)
+    return render(request, 'user_result_min_list.html',{'tb_balance_list': tb_balance_list,'club_name': club_name,'user_name':user_name})

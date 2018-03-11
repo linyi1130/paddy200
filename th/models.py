@@ -82,7 +82,7 @@ class ClubUserFeedBack(models.Model):  # 玩家返水配置表
 
 class PmOperaterType(models.Model):  # 操作员操作类型维度表 例如：存款，上分，登记战绩等
     type_id = models.IntegerField(null=False)
-    type_name = models.IntegerField(null=False)
+    type_name = models.CharField(max_length=20)
     inactive_time = models.DateTimeField(default='2037-01-01')
 
 
@@ -123,3 +123,30 @@ class PmAccount(models.Model):  # 账户类型维度表(银行卡，微信，支
     type_name = models.CharField(max_length=20)
     inactive_time = models.DateTimeField(default='2037-01-01')
 
+
+class UserBalance(models.Model):  # 用户流水表
+    serial_no = models.CharField(max_length=30)
+    account_id = models.IntegerField(null=False)
+    user_id = models.IntegerField(null=False)
+    club_id = models.IntegerField(null=False)
+    balance = models.IntegerField(null=False)
+    chance = models.IntegerField(null=False)
+    type_id = models.IntegerField(null=False)
+    operator_id = models.IntegerField(null=False)
+    note = models.CharField(max_length=80)
+    update_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-1-1')
+
+
+class ClubBalance(models.Model):  # 俱乐部客服流水表
+    serial_no = models.CharField(max_length=30)
+    account_id = models.IntegerField(null=False)
+    club_id = models.IntegerField(null=False)
+    balance = models.IntegerField(null=False)
+    chance = models.IntegerField(null=False)
+    type_id = models.IntegerField(null=True)
+    operator_id = models.IntegerField(null=False)
+    group_id = models.IntegerField(null=True)
+    note = models.CharField(max_length=80)
+    update_time = models.DateTimeField(default=timezone.now)
+    inactive_time = models.DateTimeField(default='2037-01-01')

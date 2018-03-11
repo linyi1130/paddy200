@@ -40,4 +40,10 @@ urlpatterns = [
     url(r'^user/', user),
     url(r'^register_user/', register_user),
     url(r'^user_subs_list/', user_subs_list),
+    url(r'^user_account_info/', user_account_info),
+    url(r'^group_subs_list/', group_subs_list),
+    url(r'^user_balance_cash/', user_balance_cash),
+    url(r'^check_cash_balance/', check_cash_balance),
+    url(r'^user_subs_balance_list/', user_subs_balance_list),
+    url(r'^user_result_min_list/', user_result_min_list),
 ]
